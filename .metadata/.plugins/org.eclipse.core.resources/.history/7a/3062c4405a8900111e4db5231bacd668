@@ -1,0 +1,5 @@
+package com.logistics.payment.exception;
+
+public class PaymentNotFoundException {
+
+}

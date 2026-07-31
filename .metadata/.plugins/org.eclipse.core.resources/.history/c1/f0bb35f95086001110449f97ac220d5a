@@ -1,0 +1,5 @@
+package com.logistics.order.controller;
+
+public class OrderController {
+
+}

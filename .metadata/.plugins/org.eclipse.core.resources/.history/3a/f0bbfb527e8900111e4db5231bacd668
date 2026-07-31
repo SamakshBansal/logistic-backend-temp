@@ -1,0 +1,9 @@
+package com.logistics.payment.webhook;
+
+public interface WebhookService {
+
+	void processWebhook(String payload, String signature);
+
+	void handleWebhook(RazorpayWebhookRequest request, String signature);
+
+}

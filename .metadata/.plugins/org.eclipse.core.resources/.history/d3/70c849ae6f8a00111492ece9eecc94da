@@ -1,0 +1,5 @@
+package com.logistics.auth.controller;
+
+public class AdminController {
+
+}

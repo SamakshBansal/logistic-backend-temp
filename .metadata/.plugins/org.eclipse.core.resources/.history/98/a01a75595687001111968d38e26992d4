@@ -1,0 +1,5 @@
+package com.logistics.payment.repository;
+
+public class PaymentRepository {
+
+}

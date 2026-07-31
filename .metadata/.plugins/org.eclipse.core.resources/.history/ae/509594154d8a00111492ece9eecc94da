@@ -1,0 +1,5 @@
+package com.logistics.notification.dto;
+
+public class NotificationEvent {
+
+}

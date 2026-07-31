@@ -1,0 +1,5 @@
+package com.logistics.auth.dto.request;
+
+public class CreateDeliveryAgentRequest {
+
+}

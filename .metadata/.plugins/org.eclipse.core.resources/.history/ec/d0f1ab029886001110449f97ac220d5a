@@ -1,0 +1,5 @@
+package com.logistics.order.dto.request;
+
+public class UpdateOrderStatusRequest {
+
+}

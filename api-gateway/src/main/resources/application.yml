@@ -1,0 +1,81 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+
+          globalcors:
+            cors-configurations:
+              "[/**]":
+                allowedOrigins:
+                  - "http://localhost:5173"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - PATCH
+                  - OPTIONS
+                allowedHeaders: "*"
+                allowCredentials: true
+
+          routes:
+
+            # ==========================
+            # Auth Service
+            # ==========================
+            - id: auth-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/api/v1/auth/**
+
+            # ==========================
+            # Admin APIs (Auth Service)
+            # ==========================
+            - id: admin-auth-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/api/v1/admin/users/**
+
+            # ==========================
+            # Order APIs
+            # ==========================
+            - id: order-service
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/api/v1/orders/**
+
+            # ==========================
+            # Admin APIs (Order Service)
+            # ==========================
+            - id: admin-order-service
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/api/v1/admin/orders/**,/api/v1/admin/dashboard
+
+            # ==========================
+            # Payment APIs
+            # ==========================
+            - id: payment-service
+              uri: lb://PAYMENT-SERVICE
+              predicates:
+                - Path=/api/v1/payments/**
+
+            # ==========================
+            # Agent APIs (Order Service)
+            # ==========================
+            - id: agent-service
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/api/v1/agent/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

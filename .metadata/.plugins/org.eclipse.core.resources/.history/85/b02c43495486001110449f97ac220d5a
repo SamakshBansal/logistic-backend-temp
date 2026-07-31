@@ -1,0 +1,5 @@
+package com.logistics.order.exception;
+
+public class GlobalExceptionHandler {
+
+}

@@ -1,0 +1,10 @@
+package com.logistics.payment.gateway;
+
+import com.logistics.payment.dto.response.PaymentResponse;
+import com.logistics.payment.entity.Payment;
+
+public interface PaymentGateway {
+
+	PaymentResponse createPayment(Payment payment);
+
+}

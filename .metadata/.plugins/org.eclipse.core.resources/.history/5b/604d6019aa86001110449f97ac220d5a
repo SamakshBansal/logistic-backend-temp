@@ -1,0 +1,5 @@
+package com.logistics.order.security;
+
+public class AuthenticatedUser {
+
+}

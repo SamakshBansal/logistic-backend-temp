@@ -1,0 +1,16 @@
+package com.logistics.payment.config;
+
+import com.razorpay.RazorpayClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RazorpayConfig {
+
+	@Bean
+	public RazorpayClient razorpayClient(RazorpayProperties properties) throws RazorpayException {
+
+		return new RazorpayClient(properties.getKeyId(), properties.getKeySecret());
+
+	}
+}

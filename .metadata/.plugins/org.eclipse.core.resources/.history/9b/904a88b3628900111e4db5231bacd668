@@ -1,0 +1,22 @@
+package com.logistics.order.controller;
+
+import com.logistics.order.dto.response.OrderPaymentDetailsResponse;
+import com.logistics.order.service.OrderService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/v1/internal/orders")
+@RequiredArgsConstructor
+public class InternalOrderController {
+
+	private final OrderService orderService;
+
+	@GetMapping("/{orderId}/payment-details")
+	public OrderPaymentDetailsResponse getPaymentDetails(@PathVariable UUID orderId) {
+
+		return orderService.getPaymentDetails(orderId);
+	}
+}

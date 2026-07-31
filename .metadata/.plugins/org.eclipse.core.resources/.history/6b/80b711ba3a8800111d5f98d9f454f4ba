@@ -1,0 +1,5 @@
+package com.logistics.payment.gateway.impl;
+
+public class RazorpayGatewayService {
+
+}

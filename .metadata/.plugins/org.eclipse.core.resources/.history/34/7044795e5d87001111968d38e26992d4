@@ -1,0 +1,5 @@
+package com.logistics.order.service.impl;
+
+public class PricingServiceImpl {
+
+}

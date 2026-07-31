@@ -1,0 +1,19 @@
+package com.logistics.payment.service.impl;
+
+import org.springframework.stereotype.Service;
+
+import com.logistics.payment.dto.request.RazorpayWebhookRequest;
+import com.logistics.payment.service.WebhookService;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class WebhookServiceImpl implements WebhookService {
+
+	@Override
+	public void processWebhook(String payload, String signature) {
+
+	}
+
+}

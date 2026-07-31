@@ -1,0 +1,5 @@
+package com.logistics.notification.consumer;
+
+public class NotificationConsumer {
+
+}

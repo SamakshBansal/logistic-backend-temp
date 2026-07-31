@@ -1,0 +1,5 @@
+package com.logistics.notification.enums;
+
+public enum NotificationEventType {
+
+}

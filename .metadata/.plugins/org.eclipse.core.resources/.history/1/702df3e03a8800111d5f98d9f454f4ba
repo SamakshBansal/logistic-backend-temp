@@ -1,0 +1,26 @@
+package com.logistics.payment.gateway.impl;
+
+import com.logistics.payment.dto.response.PaymentResponse;
+import com.logistics.payment.entity.Payment;
+import com.logistics.payment.gateway.PaymentGateway;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class RazorpayGatewayService implements PaymentGateway {
+
+	private final PaymentRepository paymentRepository;
+
+	private final OrderClient orderClient;
+
+	private final PaymentGateway paymentGateway;
+
+	@Override
+	public PaymentResponse createPayment(Payment payment) {
+
+		// We'll integrate Razorpay in the next step
+
+		return null;
+	}
+}

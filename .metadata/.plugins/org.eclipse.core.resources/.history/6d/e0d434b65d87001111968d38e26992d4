@@ -1,0 +1,27 @@
+package com.logistics.order.service.impl;
+
+import com.logistics.order.enums.PackageType;
+import com.logistics.order.service.PricingService;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+
+@Service
+public class PricingServiceImpl implements PricingService {
+
+	@Override
+	public BigDecimal calculatePrice(PackageType packageType, Double weight) {
+
+		double ratePerKg = switch (packageType) {
+
+		case STANDARD -> 100;
+
+		case FRAGILE -> 150;
+
+		case EXPRESS -> 200;
+		};
+
+		return BigDecimal.valueOf(weight * ratePerKg);
+
+	}
+}

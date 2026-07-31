@@ -1,0 +1,11 @@
+package com.logistics.auth.service;
+
+import com.logistics.auth.dto.request.CreateUserRequest;
+
+public interface AdminService {
+
+	void createDeliveryAgent(CreateUserRequest request);
+
+	void createAdmin(CreateUserRequest request);
+
+}

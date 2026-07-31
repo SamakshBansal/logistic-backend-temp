@@ -1,0 +1,5 @@
+package com.logistics.order.dto.response;
+
+public class OrderPaymentDetailsResponse {
+
+}

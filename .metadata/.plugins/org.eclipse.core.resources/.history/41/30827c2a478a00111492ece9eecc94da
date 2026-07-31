@@ -1,0 +1,33 @@
+package com.logistics.auth.service.impl;
+
+import com.logistics.auth.dto.request.CreateDeliveryAgentRequest;
+import com.logistics.auth.entity.User;
+import com.logistics.auth.enums.Role;
+import com.logistics.auth.exception.UserAlreadyExistsException;
+import com.logistics.auth.repository.UserRepository;
+import com.logistics.auth.service.AdminService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AdminServiceImpl implements AdminService {
+
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+
+	@Override
+	public void createDeliveryAgent(CreateDeliveryAgentRequest request) {
+
+		if (userRepository.existsByEmail(request.getEmail())) {
+			throw new UserAlreadyExistsException("Email already exists");
+		}
+
+		User agent = User.builder().name(request.getName()).email(request.getEmail())
+				.password(passwordEncoder.encode(request.getPassword())).role(Role.DELIVERY_AGENT).enabled(true)
+				.build();
+
+		userRepository.save(agent);
+	}
+}

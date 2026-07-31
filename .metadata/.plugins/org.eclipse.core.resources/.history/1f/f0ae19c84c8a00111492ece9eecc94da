@@ -1,0 +1,5 @@
+package com.logistics.notification.config;
+
+public class RabbitMQConfig {
+
+}

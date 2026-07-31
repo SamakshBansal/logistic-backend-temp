@@ -1,0 +1,37 @@
+package com.logistics.payment.service.impl;
+
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.logistics.payment.client.OrderClient;
+import com.logistics.payment.config.RazorpayProperties;
+import com.logistics.payment.repository.PaymentRepository;
+import com.logistics.payment.service.WebhookService;
+import com.logistics.payment.util.RazorpayWebhookUtil;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class WebhookServiceImpl implements WebhookService {
+
+	private final ObjectMapper objectMapper;
+
+	private final PaymentRepository paymentRepository;
+
+	private final OrderClient orderClient;
+
+	private final RazorpayProperties razorpayProperties;
+
+	private final RazorpayWebhookUtil webhookUtil;
+
+	@Override
+	public void processWebhook(String payload, String signature) {
+
+		if (!webhookUtil.verify(payload, signature)) {
+			throw new PaymentVerificationException("Invalid webhook signature");
+		}
+
+	}
+
+}

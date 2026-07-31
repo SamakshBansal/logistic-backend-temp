@@ -1,0 +1,8 @@
+package com.logistics.payment.dto.response;
+
+@Getter
+@Setter
+public class Payload {
+
+	private PaymentEntity payment;
+}

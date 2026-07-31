@@ -1,0 +1,61 @@
+package com.logistics.payment.service.impl;
+
+import com.logistics.payment.client.OrderClient;
+import com.logistics.payment.dto.request.CreatePaymentRequest;
+import com.logistics.payment.dto.response.OrderPaymentDetailsResponse;
+import com.logistics.payment.dto.response.PaymentResponse;
+import com.logistics.payment.entity.Payment;
+import com.logistics.payment.enums.PaymentStatus;
+import com.logistics.payment.repository.PaymentRepository;
+import com.logistics.payment.service.PaymentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class PaymentServiceImpl implements PaymentService {
+
+	private final PaymentRepository paymentRepository;
+	private final OrderClient orderClient;
+
+	private static final UUID TEST_CUSTOMER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+
+	@Override
+	public PaymentResponse createPayment(CreatePaymentRequest request) {
+
+		OrderPaymentDetailsResponse order = orderClient.getPaymentDetails(request.getOrderId());
+
+		Payment payment = Payment.builder().orderId(request.getOrderId())
+
+				// Temporary values
+				.customerId(order.getCustomerId()).amount(order.getAmount()).currency("INR")
+
+				.paymentStatus(PaymentStatus.PENDING)
+
+				.paymentMethod(null)
+
+				.paymentLink("https://dummy-payment-link.com")
+
+				.build();
+
+		Payment savedPayment = paymentRepository.save(payment);
+
+		return mapToResponse(savedPayment);
+	}
+
+	private PaymentResponse mapToResponse(Payment payment) {
+
+		return PaymentResponse.builder()
+
+				.paymentId(payment.getId()).orderId(payment.getOrderId()).customerId(payment.getCustomerId())
+				.amount(payment.getAmount()).currency(payment.getCurrency()).paymentStatus(payment.getPaymentStatus())
+				.paymentMethod(payment.getPaymentMethod()).paymentLink(payment.getPaymentLink())
+				.createdAt(payment.getCreatedAt())
+
+				.build();
+
+	}
+}

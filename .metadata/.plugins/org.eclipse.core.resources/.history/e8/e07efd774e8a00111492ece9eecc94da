@@ -1,0 +1,5 @@
+package com.logistics.payment.service.impl;
+
+public class NotificationPublisherImpl {
+
+}

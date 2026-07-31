@@ -1,0 +1,5 @@
+package com.logistics.payment.dto.response;
+
+public class PaymentEntity {
+
+}

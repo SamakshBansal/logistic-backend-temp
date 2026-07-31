@@ -1,0 +1,30 @@
+package com.logistics.auth.controller.admin;
+
+import com.logistics.auth.dto.request.CreateUserRequest;
+import com.logistics.auth.service.AdminService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/admin/users")
+@RequiredArgsConstructor
+public class AdminController {
+
+	private final AdminService adminService;
+
+	@PostMapping("/agents")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void createDeliveryAgent(@Valid @RequestBody CreateUserRequest request) {
+
+		adminService.createDeliveryAgent(request);
+	}
+
+	@PostMapping("/admins")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void createAdmin(@Valid @RequestBody CreateUserRequest request) {
+
+		adminService.createAdmin(request);
+	}
+}

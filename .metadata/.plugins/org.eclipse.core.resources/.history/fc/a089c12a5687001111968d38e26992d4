@@ -1,0 +1,5 @@
+package com.logistics.payment.enums;
+
+public enum PaymentStatus {
+
+}

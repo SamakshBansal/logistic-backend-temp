@@ -1,0 +1,5 @@
+package com.logistics.notification.service.impl;
+
+public class NotificationServiceImpl {
+
+}

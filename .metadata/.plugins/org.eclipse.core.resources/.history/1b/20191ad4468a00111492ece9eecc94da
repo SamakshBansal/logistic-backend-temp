@@ -1,0 +1,24 @@
+package com.logistics.auth.controller;
+
+import com.logistics.auth.dto.request.CreateDeliveryAgentRequest;
+import com.logistics.auth.dto.response.ApiResponse;
+import com.logistics.auth.service.AdminService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/admin")
+@RequiredArgsConstructor
+public class AdminController {
+
+	private final AdminService adminService;
+
+	@PostMapping("/agents")
+	public ApiResponse<Void> createDeliveryAgent(@Valid @RequestBody CreateDeliveryAgentRequest request) {
+
+		adminService.createDeliveryAgent(request);
+
+		return ApiResponse.<Void>builder().success(true).message("Delivery agent created successfully").build();
+	}
+}

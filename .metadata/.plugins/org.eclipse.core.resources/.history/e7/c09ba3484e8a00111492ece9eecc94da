@@ -1,0 +1,5 @@
+package com.logistics.payment.config;
+
+public class RabbitMQConfig {
+
+}

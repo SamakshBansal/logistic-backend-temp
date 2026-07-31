@@ -1,0 +1,5 @@
+package com.logistics.auth.service.impl;
+
+public class AdminServiceImpl {
+
+}
