@@ -191,6 +191,11 @@ function OrderDetails() {
                             <td>{order.createdAt}</td>
                         </tr>
 
+                        <tr>
+                            <th>Delivery</th>
+                            <td>7 days</td>
+                        </tr>
+
                     </tbody>
 
                 </table>
