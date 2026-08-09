@@ -1,0 +1,265 @@
+services:
+
+  # =========================================================
+  # MYSQL
+  # =========================================================
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+
+  # =========================================================
+  # RABBITMQ
+  # =========================================================
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+
+  # =========================================================
+  # EUREKA SERVER
+  # =========================================================
+
+  eureka-server:
+    build:
+      context: ../eureka-server
+      dockerfile: Dockerfile
+
+    container_name: eureka-server
+
+    ports:
+      - "8761:8761"
+
+    restart: unless-stopped
+
+
+  # =========================================================
+  # AUTH SERVICE
+  # =========================================================
+
+  auth-service:
+    build:
+      context: ../auth-service
+      dockerfile: Dockerfile
+
+    container_name: auth-service
+
+    ports:
+      - "8081:8081"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/auth_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: 3600000
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+      eureka-server:
+        condition: service_started
+
+    restart: unless-stopped
+
+
+  # =========================================================
+  # ORDER SERVICE
+  # =========================================================
+
+  order-service:
+    build:
+      context: ../order-service
+      dockerfile: Dockerfile
+
+    container_name: order-service
+
+    ports:
+      - "8082:8082"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/order_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+      JWT_SECRET: ${JWT_SECRET}
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+      rabbitmq:
+        condition: service_healthy
+
+      eureka-server:
+        condition: service_started
+
+    restart: unless-stopped
+
+
+  # =========================================================
+  # PAYMENT SERVICE
+  # =========================================================
+
+  payment-service:
+    build:
+      context: ../payment-service
+      dockerfile: Dockerfile
+
+    container_name: payment-service
+
+    ports:
+      - "8083:8083"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/payment_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET}
+      RAZORPAY_CURRENCY: INR
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+      eureka-server:
+        condition: service_started
+
+    restart: unless-stopped
+
+
+  # =========================================================
+  # NOTIFICATION SERVICE
+  # =========================================================
+
+  notification-service:
+    build:
+      context: ../notification-service
+      dockerfile: Dockerfile
+
+    container_name: notification-service
+
+    ports:
+      - "8085:8085"
+
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+      eureka-server:
+        condition: service_started
+
+    restart: unless-stopped
+
+
+  # =========================================================
+  # API GATEWAY
+  # =========================================================
+
+  api-gateway:
+    build:
+      context: ../api-gateway
+      dockerfile: Dockerfile
+
+    container_name: api-gateway
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+    depends_on:
+      eureka-server:
+        condition: service_started
+
+      auth-service:
+        condition: service_started
+
+      order-service:
+        condition: service_started
+
+      payment-service:
+        condition: service_started
+
+    restart: unless-stopped
+
+
+  # =========================================================
+  # FRONTEND
+  # =========================================================
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+
+    container_name: frontend
+
+    ports:
+      - "5173:80"
+
+    depends_on:
+      - api-gateway
+
+    restart: unless-stopped
+
+
+# =========================================================
+# VOLUMES
+# =========================================================
+
+volumes:
+  mysql_data:

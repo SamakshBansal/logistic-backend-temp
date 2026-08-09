@@ -1,39 +1,39 @@
 server:
-    port: 8083
+  port: 8083
 
 spring:
-    application:
-        name: payment-service
+  application:
+    name: payment-service
 
-    datasource:
-        url: jdbc:mysql://localhost:3306/payment_db
-        username: root
-        password: root
-        driver-class-name: com.mysql.cj.jdbc.Driver
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/payment_db}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
-    jpa:
-        hibernate:
-            ddl-auto: update
+  jpa:
+    hibernate:
+      ddl-auto: update
 
-        show-sql: true
+    show-sql: true
 
-        properties:
-            hibernate:
-                format_sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
 eureka:
-    client:
-        service-url:
-            defaultZone: http://localhost:8761/eureka
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
 
 management:
-    endpoints:
-        web:
-            exposure:
-                include: health,info
+  endpoints:
+    web:
+      exposure:
+        include: health,info
 
 razorpay:
-    key-id: rzp_test_THlp1x8mckAtwS
-    key-secret: um8tBPy3vWFhwAPEEd370ybH
-    webhook-secret: dummy-webhook-secret
-    currency: INR
+  key-id: ${RAZORPAY_KEY_ID}
+  key-secret: ${RAZORPAY_KEY_SECRET}
+  webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:dummy-webhook-secret}
+  currency: ${RAZORPAY_CURRENCY:INR}
